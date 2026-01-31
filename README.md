@@ -24,11 +24,13 @@ Digidonar v2.0 ek modern Blood Donation Lead Management System hai, jise user-fr
 ├── backend/         # Node.js & Express API code
 └── vercel.json      # Frontend routing configuration
 
+```
+
 👨‍💻 Developed By
 Jitendra Kumar MERN Stack Developer
 
 Aap mujhse niche diye gaye platforms par jud sakte hain:
 
-LinkedIn: linkedin.com/in/technicaljitendra
+LinkedIn: (linkedin.com/in/technicaljitendra)
 
-GitHub: github.com/technical-jitendra-kumar
+GitHub: (github.com/technical-jitendra-kumar)
