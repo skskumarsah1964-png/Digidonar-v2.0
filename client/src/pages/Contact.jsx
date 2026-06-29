@@ -197,11 +197,12 @@ const Contact = () => {
                 ></iframe>
 
               {/* Address Card Over Map */}
-<div className="absolute inset-0 flex items-center justify-center pointer-events-none p-4">
-    <div className="hidden md:block bg-white/95 backdrop-blur-md p-6 rounded-3xl shadow-2xl border border-white/20 max-w-sm text-center pointer-events-auto">
-        <h4 className="font-black text-slate-900 text-lg mb-2">Visit Our Office</h4>
-        <p className="text-sm text-slate-600 font-medium leading-relaxed">
-            Dalippur Towers, Flat no. 7, 1st Floor, AB Block, Sapru Marg, Hazratganj, Lucknow, Uttar Pradesh 226001
+{/* Address Card Over Map - Centered Top & Compact */}
+<div className="absolute top-6 inset-x-0 flex justify-center pointer-events-none p-4 z-10">
+    <div className="hidden md:block bg-white/95 backdrop-blur-md py-4 px-6 rounded-2xl shadow-xl border border-slate-100 max-w-xs text-center pointer-events-auto">
+        <h4 className="font-black text-slate-900 text-sm mb-1">Our Office Address</h4>
+        <p className="text-xs text-slate-600 font-medium leading-relaxed">
+            Dalippur Towers, Flat no. 7, 1st Floor, AB Block, Sapru Marg, Hazratganj, Lucknow - 226001
         </p>
     </div>
 </div>
