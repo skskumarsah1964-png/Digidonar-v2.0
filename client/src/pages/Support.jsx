@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { MessageCircle, Mail, Phone, BookOpen, Search, LifeBuoy, Send, X, CheckCircle, Loader2, Code2, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 import api, { API_URL } from '../api';
@@ -8,11 +8,22 @@ const Support = () => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   
-  // --- REAL-TIME SEARCH STATE ---
+  // --- SEARCH STATES & REF ---
   const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    // Keyboard Shortcut Logic: '/' dabaate hi search active ho jaye
+    const handleKeyDown = (e) => {
+      if (e.key === '/' && document.activeElement !== searchInputRef.current) {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const contactOptions = [
@@ -57,6 +68,35 @@ const Support = () => {
   const filteredTopics = knowledgeTopics.filter(topic =>
     topic.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // --- HANDLE SEARCH CHANGE & AUTO SCROLL ---
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    
+    // Agar user type karna start kare to smoothly Knowledge base section par scroll kare
+    if (value.length === 1) {
+      document.getElementById('knowledge-base')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  // --- HELPER TO HIGHLIGHT TEXT ---
+  const highlightText = (text, highlight) => {
+    if (!highlight.trim()) return <span>{text}</span>;
+    const regex = new RegExp(`(${highlight})`, 'gi');
+    const parts = text.split(regex);
+    return (
+      <span>
+        {parts.map((part, i) => 
+          regex.test(part) ? (
+            <mark key={i} className="bg-blue-50 text-[#0D66BA] font-bold rounded px-0.5">{part}</mark>
+          ) : (
+            part
+          )
+        )}
+      </span>
+    );
+  };
 
   // --- Form submit handler ---
   const handleSubmit = async (e) => {
@@ -104,22 +144,27 @@ const Support = () => {
 
           <div className="relative max-w-xl mx-auto group">
             <input 
+              ref={searchInputRef}
               type="text" 
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search for articles, DLT help, or APIs..." 
-              className="w-full bg-white/10 border border-white/20 rounded-2xl py-5 px-12 focus:outline-none focus:bg-white focus:text-slate-900 focus:shadow-lg transition-all duration-300"
+              onChange={handleSearchChange}
+              placeholder="Search for articles, DLT help, or APIs... (Press '/' to focus)" 
+              className="w-full bg-white/10 border border-white/20 rounded-2xl py-5 px-12 focus:outline-none focus:bg-white focus:text-slate-900 focus:shadow-lg transition-all duration-300 text-base"
             />
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus:text-[#0D66BA] transition-colors" size={20} />
             
             {/* Clear Search Button */}
-            {searchQuery && (
+            {searchQuery ? (
               <button 
                 onClick={() => setSearchQuery('')}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-900 focus:text-slate-900 bg-slate-200/50 hover:bg-slate-200 p-1 rounded-full transition-colors"
               >
                 <X size={16} />
               </button>
+            ) : (
+              <kbd className="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:inline-block bg-white/10 text-gray-400 text-xs px-2 py-0.5 rounded border border-white/20 pointer-events-none">
+                /
+              </kbd>
             )}
           </div>
         </div>
@@ -167,7 +212,9 @@ const Support = () => {
               {filteredTopics.map((topic, i) => (
                 <div key={i} className="bg-white p-6 rounded-2xl hover:bg-gradient-to-r hover:from-[#0D66BA]/10 hover:to-[#1CB48D]/10 hover:shadow-lg cursor-pointer transition-all border border-slate-200/50 flex items-center gap-3 group">
                   <div className="w-2 h-2 rounded-full bg-[#1CB48D] group-hover:scale-120 transition-transform"></div>
-                  <span className="font-semibold text-slate-700 group-hover:text-[#0D66BA] transition-colors">{topic}</span>
+                  <span className="font-semibold text-slate-700 group-hover:text-[#0D66BA] transition-colors">
+                    {highlightText(topic, searchQuery)}
+                  </span>
                 </div>
               ))}
             </div>
