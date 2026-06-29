@@ -113,11 +113,6 @@ const Contact = () => {
                                     <textarea name="message" required rows="4" placeholder="Tell us about your requirements..." className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-6 focus:outline-none focus:border-[#44BBDB] focus:ring-2 focus:ring-[#44BBDB]/20 transition-all"></textarea>
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-sm font-bold text-slate-700 ml-1">How can we help?</label>
-                                    <textarea name="message" required rows="4" placeholder="Tell us about your requirements..." className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-6 focus:outline-none focus:border-[#44BBDB] focus:ring-2 focus:ring-[#44BBDB]/20 transition-all"></textarea>
-                                </div>
-
                                 <div className="flex items-start gap-3">
                                     <input 
                                         type="checkbox" 
@@ -134,7 +129,7 @@ const Contact = () => {
                                 <button 
                                     disabled={loading}
                                     className="w-full bg-gradient-to-r from-[#0D66BA] to-[#1CB48D] text-white py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-all shadow-xl shadow-blue-200 disabled:opacity-70 disabled:cursor-not-allowed"
-                                >
+                                open>
                                     {loading ? (
                                         <>Sending... <Loader2 className="animate-spin" /></>
                                     ) : (
@@ -194,10 +189,9 @@ const Contact = () => {
             </section>
             
             {/* Map Section */}
-            {/* [Note: Iframe is kept as per original but ensured better mobile layout] */}
             <section className="h-[450px] w-full bg-slate-100 relative z-0 overflow-hidden border-t border-slate-200">
                 <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.4332832565434!2d77.3639439150825!3d28.616788582424574!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce563456789%3A0x1234567890abcdef!2sSector%2062%2C%20Noida%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1612345678901!5m2!1sen!2sin"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m4!1s0x399bfd0818274d81%3A0x6ca337672f23b6b6!2sDalippur+Tower%2C+Sapru+Marg%2C+Prem+Nagar%2C+Hazratganj%2C+Lucknow%2C+Uttar+Pradesh+226001!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfd0818274d81%3A0x6ca337672f23b6b6!2sDalippur+Tower%2C+Sapru+Marg%2C+Prem+Nagar%2C+Hazratganj%2C+Lucknow%2C+Uttar+Pradesh+226001!5e0!3m2!1sen!2sin!4v1718100000000!5m2!1sen!2sin"
                     width="100%"
                     height="100%"
                     style={{ border: 0, filter: "grayscale(0.5) contrast(1.2) opacity(0.85)" }}
@@ -209,7 +203,7 @@ const Contact = () => {
 
                 <div className="absolute top-10 left-10 hidden md:block bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-white/20 pointer-events-none">
                     <h4 className="font-black text-slate-900 mb-1">Visit Our Office</h4>
-                    <p className="text-sm text-slate-600">Sector 62, Noida, UP, India</p>
+                    <p className="text-sm text-slate-600">Hazratganj, Lucknow, UP, India</p>
                 </div>
             </section>
         </div>
