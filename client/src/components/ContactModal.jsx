@@ -6,37 +6,24 @@ const ContactModal = ({ isOpen, onClose, title }) => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   
-  // Internal state jo handle karegi ki popup auto-open hona chahiye ya nahi
-  const [isAutoOpen, setIsAutoOpen] = useState(false);
+  // Internal state: Shuruat mein hi check karega ki kya browser session mein pehle se closed save hai ya nahi
+  const [isAutoOpen, setIsAutoOpen] = useState(() => {
+    const isFormClosedByUser = sessionStorage.getItem('contact_modal_closed');
+    return isFormClosedByUser !== 'true'; // Agar 'true' nahi hai, toh open ho jaega (reload par bhi)
+  });
 
-  // --- AUTOMATION LOGIC (Har 15 sec baad open hoga, lekin cut karne par nahi aayega) ---
+  // Agar Navbar se click hoke alag se open kiya jaye
   useEffect(() => {
-    // Agar Navbar se click hoke isOpen true aata hai, toh modal dikhao
     if (isOpen) {
       setIsAutoOpen(true);
-      return;
     }
-
-    // Check karo ki kya user pehle hi isko cut (close) kar chuka hai
-    const isFormClosedByUser = sessionStorage.getItem('contact_modal_closed');
-    if (isFormClosedByUser === 'true') return;
-
-    // Har 15 seconds (15000ms) baad check karne wala timer
-    const interval = setInterval(() => {
-      const alreadyClosed = sessionStorage.getItem('contact_modal_closed');
-      if (alreadyClosed !== 'true') {
-        setIsAutoOpen(true);
-      }
-    }, 15000);
-
-    return () => clearInterval(interval);
   }, [isOpen]);
 
   // Jab user 'X' button dabakar ya backdrop par click karke form cut karega
   const handleClose = () => {
-    sessionStorage.setItem('contact_modal_closed', 'true'); // Browser mein save karlo ki user ne cut kar diya
+    sessionStorage.setItem('contact_modal_closed', 'true'); // Browser memory mein set kar diya ki user ne cut kar diya hai
     setIsAutoOpen(false);
-    if (onClose) onClose(); // Navbar wale state ko bhi close kar do
+    if (onClose) onClose(); // Navbar ki state ko bhi sync kar dega
   };
 
   // Agar dono jagah se closed hai toh screen par kuch mat dikhao
@@ -46,7 +33,7 @@ const ContactModal = ({ isOpen, onClose, title }) => {
     e.preventDefault();
     setLoading(true);
 
-    // BACKEND CONNECTION: Bilkul safe hai, 0% change
+    // BACKEND CONNECTION: Bilkul safe aur unchanged
     const formData = {
       name: e.target[0].value,
       email: e.target[1].value,
@@ -59,7 +46,7 @@ const ContactModal = ({ isOpen, onClose, title }) => {
       setSubmitted(true);
       setTimeout(() => {
         setSubmitted(false);
-        handleClose();
+        handleClose(); // Submit hone ke baad popup hamesha ke liye close ho jayega
       }, 3000);
     } catch (err) {
       console.error(err);
