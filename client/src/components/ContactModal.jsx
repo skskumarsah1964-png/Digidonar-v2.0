@@ -5,37 +5,44 @@ import api from '../api';
 const ContactModal = ({ isOpen, onClose, title }) => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [visible, setVisible] = useState(false); // Controls modal visibility
+  const [visible, setVisible] = useState(false);
   const timerRef = useRef(null);
+  const closedThisSession = useRef(false); // Cut kiya? Session mein band
 
-  // ─── Helper: modal open karo aur 10-sec timer reset karo ───
-  const openModal = () => setVisible(true);
+  // ─── Check: kya user ne pehle kabhi submit kiya tha? ───
+  const isPermaBlocked = () => localStorage.getItem('contact_form_submitted') === 'true';
 
-  // ─── 10-second repeating timer ───
+  // ─── Timer: sirf tab start hoga jab koi block nahi ───
   const startTimer = () => {
     clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
-      setVisible(true); // Har 10 sec baad popup
+      // Sirf open karo agar: submit nahi hua hamesha ke liye AND cut nahi kiya is session mein
+      if (!isPermaBlocked() && !closedThisSession.current) {
+        setVisible(true);
+      }
     }, 10000);
   };
 
-  // ─── Page load hote hi: immediately open + timer start ───
+  // ─── Page load hote hi ───
   useEffect(() => {
-    openModal();
-    startTimer();
-    return () => clearInterval(timerRef.current); // Cleanup on unmount
+    if (!isPermaBlocked()) {
+      setVisible(true); // Turant open
+      startTimer();     // 10 sec wala timer bhi shuru
+    }
+    return () => clearInterval(timerRef.current);
   }, []);
 
-  // ─── Agar Navbar se manually open kiya ───
+  // ─── Navbar se manually open kiya ───
   useEffect(() => {
-    if (isOpen) openModal();
+    if (isOpen && !isPermaBlocked()) setVisible(true);
   }, [isOpen]);
 
-  // ─── User ne X ya backdrop click kiya ───
+  // ─── User ne X ya backdrop click kiya (cut) ───
   const handleClose = () => {
+    closedThisSession.current = true; // Is session mein band — reload pe reset hoga
+    clearInterval(timerRef.current);  // Timer bhi band
     setVisible(false);
     if (onClose) onClose();
-    // Timer chalta rehta hai — 10 sec baad phir aayega
   };
 
   // ─── Form submit ───
@@ -53,11 +60,12 @@ const ContactModal = ({ isOpen, onClose, title }) => {
     try {
       await api.post('/leads', formData);
       setSubmitted(true);
+      localStorage.setItem('contact_form_submitted', 'true'); // Hamesha ke liye band
+      clearInterval(timerRef.current); // Timer bhi permanently band
       setTimeout(() => {
         setSubmitted(false);
         setVisible(false);
         if (onClose) onClose();
-        // Timer chalta rehta hai — 10 sec baad phir aayega
       }, 3000);
     } catch (err) {
       console.error(err);
