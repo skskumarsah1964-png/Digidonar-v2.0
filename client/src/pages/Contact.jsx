@@ -196,10 +196,15 @@ const Contact = () => {
                     className="hover:opacity-100 transition-opacity duration-500"
                 ></iframe>
 
-                <div className="absolute top-10 left-10 hidden md:block bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-white/20 pointer-events-none">
-                    <h4 className="font-black text-slate-900 mb-1">Visit Our Office</h4>
-                    <p className="text-sm text-slate-600">Hazratganj, Lucknow, UP, India</p>
-                </div>
+              {/* Address Card Over Map */}
+<div className="absolute inset-0 flex items-center justify-center pointer-events-none p-4">
+    <div className="hidden md:block bg-white/95 backdrop-blur-md p-6 rounded-3xl shadow-2xl border border-white/20 max-w-sm text-center pointer-events-auto">
+        <h4 className="font-black text-slate-900 text-lg mb-2">Visit Our Office</h4>
+        <p className="text-sm text-slate-600 font-medium leading-relaxed">
+            Dalippur Towers, Flat no. 7, 1st Floor, AB Block, Sapru Marg, Hazratganj, Lucknow, Uttar Pradesh 226001
+        </p>
+    </div>
+</div>
             </section>
         </div>
     );
