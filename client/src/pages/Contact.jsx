@@ -129,7 +129,7 @@ const Contact = () => {
                                 <button 
                                     disabled={loading}
                                     className="w-full bg-gradient-to-r from-[#0D66BA] to-[#1CB48D] text-white py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-all shadow-xl shadow-blue-200 disabled:opacity-70 disabled:cursor-not-allowed"
-                                open>
+                                >
                                     {loading ? (
                                         <>Sending... <Loader2 className="animate-spin" /></>
                                     ) : (
@@ -191,7 +191,7 @@ const Contact = () => {
             {/* Map Section */}
             <section className="h-[450px] w-full bg-slate-100 relative z-0 overflow-hidden border-t border-slate-200">
                 <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m4!1s0x399bfd0818274d81%3A0x6ca337672f23b6b6!2sDalippur+Tower%2C+Sapru+Marg%2C+Prem+Nagar%2C+Hazratganj%2C+Lucknow%2C+Uttar+Pradesh+226001!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfd0818274d81%3A0x6ca337672f23b6b6!2sDalippur+Tower%2C+Sapru+Marg%2C+Prem+Nagar%2C+Hazratganj%2C+Lucknow%2C+Uttar+Pradesh+226001!5e0!3m2!1sen!2sin!4v1718100000000!5m2!1sen!2sin"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m4!1s0x399bfd0034a747bd%3A0xe4d3f5728a2a82fa!2sDalippur+Tower%2C+Sapru+Marg%2C+Prem+Nagar%2C+Hazratganj%2C+Lucknow%2C+Uttar+Pradesh+226001!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfd0034a747bd%3A0xe4d3f5728a2a82fa!2sDalippur+Tower!5e0!3m2!1sen!2sin!4v1719665000000!5m2!1sen!2sin"
                     width="100%"
                     height="100%"
                     style={{ border: 0, filter: "grayscale(0.5) contrast(1.2) opacity(0.85)" }}
