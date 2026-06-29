@@ -16,22 +16,19 @@ const Contact = () => {
         e.preventDefault();
         setLoading(true);
 
-        // Form se data nikalna
         const formData = {
             name: e.target.fullName.value,
             email: e.target.email.value,
             phone: e.target.phone.value,
             volume: e.target.volume.value,
             message: e.target.message.value,
-            service: "Sales Inquiry Page" // Source identify karne ke liye
+            service: "Sales Inquiry Page"
         };
 
         try {
-            // Corrected API call to match backend route
             await api.post('/leads', formData);
             setSubmitted(true);
-            e.target.reset(); // Form clear kar dega
-            // 5 second baad success message hata kar form wapas layega
+            e.target.reset();
             setTimeout(() => setSubmitted(false), 5000);
         } catch (err) {
             console.error("Submission Error:", err);
@@ -58,7 +55,7 @@ const Contact = () => {
                         Our team is ready to address your communication challenges. Please fill out the form below and we will get back to you within 2 hours.
                     </p>
                 </div>
-            </</section>
+            </section>
 
             {/* Main Section */}
             <section className="py-20 px-6 max-w-7xl mx-auto">
@@ -68,7 +65,6 @@ const Contact = () => {
                     <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl shadow-slate-200 border border-slate-100 hover:shadow-[#44BBDB]/20 transition-shadow duration-500">
                         
                         {submitted ? (
-                            // SUCCESS STATE VIEW
                             <div className="flex flex-col items-center justify-center h-full text-center space-y-4 py-10 animate-in fade-in zoom-in duration-500">
                                 <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center animate-bounce">
                                     <CheckCircle size={40} />
@@ -78,7 +74,6 @@ const Contact = () => {
                                 <button onClick={() => setSubmitted(false)} className="text-[#0D66BA] font-bold hover:underline">Send another message</button>
                             </div>
                         ) : (
-                            // ACTIVE FORM
                             <form className="space-y-6" onSubmit={handleSubmit}>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
@@ -188,10 +183,10 @@ const Contact = () => {
                 </div>
             </section>
             
-            {/* Map Section (Lucknow Hazratganj Embedded Map) */}
+            {/* Map Section - Real Fixed Embed URL */}
             <section className="h-[450px] w-full bg-slate-100 relative z-0 overflow-hidden border-t border-slate-200">
                 <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m4!2s0x399bfd081f9b3b5f%3A0x6a0f76906a6b8252!2zRGFsaXBwdXIgVG93ZXJzLCBIYXpyYXRnYW5qLCBMdWNrbm93LCBVdHRhciBQcmFkZXNoIDIyNjAwMQ!5e0!3m2!1sen!2sin!4v1719665000000!5m2!1sen!2sin"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3559.843339129598!2d80.94164037628881!3d26.844933976687483!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfd078a631627%3A0x6bcfcd729dbdbf2!2sSapru%20Marg%2C%20Hazratganj%2C%20Lucknow%2C%20Uttar%20Pradesh%20226001!5e0!3m2!1sen!2sin!4v1719661000000!5m2!1sen!2sin"
                     width="100%"
                     height="100%"
                     style={{ border: 0, filter: "grayscale(0.2) contrast(1.1)" }}
