@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { MessageCircle, Mail, Phone, BookOpen, Search, LifeBuoy, Send, X, CheckCircle, Loader2, Code2 } from 'lucide-react';
+import { MessageCircle, Mail, Phone, BookOpen, Search, LifeBuoy, Send, X, CheckCircle, Loader2, Code2, AlertCircle } from 'lucide-react';
 import axios from 'axios';
-import api, {API_URL} from '../api';
+import api, { API_URL } from '../api';
 
 const Support = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  
+  // --- REAL-TIME SEARCH STATE ---
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -50,6 +53,11 @@ const Support = () => {
     'Two-Factor Auth'
   ];
 
+  // --- FILTER LOGIC ---
+  const filteredTopics = knowledgeTopics.filter(topic =>
+    topic.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   // --- Form submit handler ---
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,7 +94,7 @@ const Support = () => {
           <div className="absolute top-10 left-1/2 w-64 h-64 bg-[#1CB48D]/10 rounded-full -translate-x-1/2 animate-pulse-slow"></div>
         </div>
         <div className="relative z-10 max-w-3xl mx-auto">
-          <LifeBuoy className="mx-auto text-[#44BBDB] mb-6 animate-spin-slow" size={48} />
+          <LifeBuoy className="mx-auto text-[#44BBDB] mb-6" size={48} />
           <h1 className="text-4xl md:text-6xl font-black mb-6">
             How can we <span className="text-[#1CB48D]">help you?</span>
           </h1>
@@ -97,10 +105,22 @@ const Support = () => {
           <div className="relative max-w-xl mx-auto group">
             <input 
               type="text" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search for articles, DLT help, or APIs..." 
               className="w-full bg-white/10 border border-white/20 rounded-2xl py-5 px-12 focus:outline-none focus:bg-white focus:text-slate-900 focus:shadow-lg transition-all duration-300"
             />
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus:text-[#0D66BA] transition-colors" size={20} />
+            
+            {/* Clear Search Button */}
+            {searchQuery && (
+              <button 
+                onClick={() => setSearchQuery('')}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-900 focus:text-slate-900 bg-slate-200/50 hover:bg-slate-200 p-1 rounded-full transition-colors"
+              >
+                <X size={16} />
+              </button>
+            )}
           </div>
         </div>
       </section>
@@ -128,20 +148,36 @@ const Support = () => {
       </section>
 
       {/* Knowledge Base */}
-      <section className="pb-24 px-6 max-w-7xl mx-auto">
+      <section className="pb-24 px-6 max-w-7xl mx-auto" id="knowledge-base">
         <div className="bg-slate-50 rounded-[3rem] p-8 md:p-16 shadow-inner">
-          <div className="flex items-center gap-4 mb-12">
-            <BookOpen className="text-[#0D66BA]" size={32} />
-            <h2 className="text-3xl font-black text-slate-900">Knowledge Base</h2>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-12">
+            <div className="flex items-center gap-4">
+              <BookOpen className="text-[#0D66BA]" size={32} />
+              <h2 className="text-3xl font-black text-slate-900">Knowledge Base</h2>
+            </div>
+            {searchQuery && (
+              <span className="text-sm font-bold text-slate-500 bg-slate-200/60 px-4 py-2 rounded-full animate-pulse">
+                Found {filteredTopics.length} results for "{searchQuery}"
+              </span>
+            )}
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {knowledgeTopics.map((topic, i) => (
-              <div key={i} className="bg-white p-6 rounded-2xl hover:bg-gradient-to-r hover:from-[#0D66BA]/10 hover:to-[#1CB48D]/10 hover:shadow-lg cursor-pointer transition-all border border-slate-200/50 flex items-center gap-3">
-                <div className="w-2 h-2 rounded-full bg-[#1CB48D]"></div>
-                <span className="font-semibold text-slate-700 hover:text-[#0D66BA] transition-colors">{topic}</span>
-              </div>
-            ))}
-          </div>
+
+          {filteredTopics.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-in fade-in duration-300">
+              {filteredTopics.map((topic, i) => (
+                <div key={i} className="bg-white p-6 rounded-2xl hover:bg-gradient-to-r hover:from-[#0D66BA]/10 hover:to-[#1CB48D]/10 hover:shadow-lg cursor-pointer transition-all border border-slate-200/50 flex items-center gap-3 group">
+                  <div className="w-2 h-2 rounded-full bg-[#1CB48D] group-hover:scale-120 transition-transform"></div>
+                  <span className="font-semibold text-slate-700 group-hover:text-[#0D66BA] transition-colors">{topic}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-white rounded-3xl border border-dashed border-slate-200 max-w-md mx-auto animate-in zoom-in-95 duration-300">
+              <AlertCircle className="mx-auto text-amber-500 mb-3" size={36} />
+              <h4 className="font-bold text-slate-900 text-lg mb-1">No topics matched</h4>
+              <p className="text-sm text-gray-500 px-6">Kuch aur try karo bro, ya phir direct niche ticket raise kar do!</p>
+            </div>
+          )}
         </div>
       </section>
 
