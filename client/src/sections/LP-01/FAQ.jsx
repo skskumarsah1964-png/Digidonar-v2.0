@@ -121,8 +121,17 @@ function AccordionItem({ q, a, isOpen, onToggle }) {
 }
 
 export default function FAQ() {
-  const [openId, setOpenId] = useState("0-0");
   const [activeCategory, setActiveCategory] = useState("All");
+
+  // Har category ke pehle item ka id default mein open set karo
+  // e.g. { "0-0": true, "1-0": true, "2-0": true, "3-0": true }
+  const [openItems, setOpenItems] = useState(() => {
+    const defaults = {};
+    faqs.forEach((_, gi) => {
+      defaults[`${gi}-0`] = true; // Har group ka index-0 item open
+    });
+    return defaults;
+  });
 
   const categories = ["All", ...faqs.map((f) => f.category)];
 
@@ -130,6 +139,13 @@ export default function FAQ() {
     activeCategory === "All"
       ? faqs
       : faqs.filter((f) => f.category === activeCategory);
+
+  const handleToggle = (id) => {
+    setOpenItems((prev) => ({
+      ...prev,
+      [id]: !prev[id], // Toggle: open tha toh band, band tha toh open
+    }));
+  };
 
   return (
     <section className="py-20 px-6 bg-slate-50 font-sans">
@@ -169,34 +185,38 @@ export default function FAQ() {
 
         {/* Accordion groups */}
         <div className="space-y-8">
-          {filtered.map((group, gi) => (
-            <div key={group.category}>
-              {/* Category label */}
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-1 h-4 rounded-full bg-teal-400 flex-shrink-0" />
-                <span className="text-[11px] font-bold text-teal-600 uppercase tracking-widest">
-                  {group.category}
-                </span>
-                <div className="flex-1 h-px bg-slate-200" />
-              </div>
+          {filtered.map((group, gi) => {
+            // Filter ke baad original index dhundho taaki id match rahe
+            const originalGi = faqs.findIndex((f) => f.category === group.category);
+            return (
+              <div key={group.category}>
+                {/* Category label */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-1 h-4 rounded-full bg-teal-400 flex-shrink-0" />
+                  <span className="text-[11px] font-bold text-teal-600 uppercase tracking-widest">
+                    {group.category}
+                  </span>
+                  <div className="flex-1 h-px bg-slate-200" />
+                </div>
 
-              {/* Items */}
-              <div className="space-y-2.5">
-                {group.items.map((item, ii) => {
-                  const id = `${gi}-${ii}`;
-                  return (
-                    <AccordionItem
-                      key={id}
-                      q={item.q}
-                      a={item.a}
-                      isOpen={openId === id}
-                      onToggle={() => setOpenId(openId === id ? null : id)}
-                    />
-                  );
-                })}
+                {/* Items */}
+                <div className="space-y-2.5">
+                  {group.items.map((item, ii) => {
+                    const id = `${originalGi}-${ii}`;
+                    return (
+                      <AccordionItem
+                        key={id}
+                        q={item.q}
+                        a={item.a}
+                        isOpen={!!openItems[id]}
+                        onToggle={() => handleToggle(id)}
+                      />
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Bottom CTA */}
